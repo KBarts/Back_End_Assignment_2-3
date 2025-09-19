@@ -1,5 +1,6 @@
 import express from "express";
 import morgan from "morgan";
+import employeesRouter from "./api/v1/routes/employees.routes";
 
 const app = express();
 
@@ -9,9 +10,12 @@ app.use(express.json());
 // HTTP request logging.
 app.use(morgan("combined"));
 
-// Health check for basic server status (matches example test).
+// Health check for basic server status 
 app.get("/health", (_req, res) => {
   res.status(200).send("Server is healthy");
 });
+
+// Employees API
+app.use("/api/v1/employees", employeesRouter);
 
 export default app;
