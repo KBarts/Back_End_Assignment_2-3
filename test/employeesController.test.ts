@@ -1,4 +1,4 @@
-// test/employeeController.test.ts
+// test/employees.controller.test.ts
 import type { Request, Response } from "express";
 import {
   getAllEmployees,
@@ -8,14 +8,30 @@ import {
   removeEmployee,
 } from "../src/api/v1/controllers/employees.controller";
 
-// Mock the service layer so these are controller-only tests.
+// Mock the service layer so these are controller-only tests
 jest.mock("../src/api/v1/services/employees.service", () => ({
   listEmployees: jest.fn(() => [
-    { id: 1, name: "Alice", position: "Branch Manager", department: "Management", email: "a@x.com", phone: "111", branchId: 1 },
+    {
+      id: 1,
+      name: "Alice",
+      position: "Branch Manager",
+      department: "Management",
+      email: "a@x.com",
+      phone: "111",
+      branchId: 1,
+    },
   ]),
   getEmployeeById: jest.fn((id: number) =>
     id === 1
-      ? { id: 1, name: "Alice", position: "Branch Manager", department: "Management", email: "a@x.com", phone: "111", branchId: 1 }
+      ? {
+          id: 1,
+          name: "Alice",
+          position: "Branch Manager",
+          department: "Management",
+          email: "a@x.com",
+          phone: "111",
+          branchId: 1,
+        }
       : undefined
   ),
   createEmployee: jest.fn((payload: any) => ({ id: 999, ...payload })),
@@ -45,7 +61,10 @@ function mockRes() {
   } as unknown as Response & { statusCode: number; body: any };
   return res;
 }
-function mockReq(params: Record<string, any> = {}, body: Record<string, any> = {}) {
+function mockReq(
+  params: Record<string, any> = {},
+  body: Record<string, any> = {}
+) {
   return { params, body } as unknown as Request;
 }
 
@@ -72,4 +91,120 @@ describe("employees.controller.getEmployee", () => {
     expect(res.body).toHaveProperty("message");
   });
 });
+
+// getAllEmployees
+describe("employees.controller.getAllEmployees", () => {
+  it("should return 200 and an array", () => {
+    const req = mockReq();
+    const res = mockRes();
+
+    getAllEmployees(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+
+  it("should return items that include id and name", () => {
+    const req = mockReq();
+    const res = mockRes();
+
+    getAllEmployees(req, res);
+
+    expect(res.body[0]).toHaveProperty("id");
+    expect(res.body[0]).toHaveProperty("name");
+  });
+});
+
+// postEmployee (create)
+describe("employees.controller.postEmployee", () => {
+  it("should return 201 and the created employee when payload is valid", () => {
+    const req = mockReq(
+      {},
+      {
+        name: "Test User",
+        position: "QA Engineer",
+        department: "IT",
+        email: "test@pixell-river.com",
+        phone: "204-555-9999",
+        branchId: 1,
+      }
+    );
+    const res = mockRes();
+
+    postEmployee(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.body).toHaveProperty("id");
+    expect(res.body).toHaveProperty("name", "Test User");
+  });
+
+  it("should return 400 when required fields are missing/invalid", () => {
+    const req = mockReq(
+      {},
+      {
+        // name missing
+        position: "QA",
+        department: "IT",
+        email: "bad@pixell-river.com",
+        phone: "204-555-0000",
+        branchId: "not-a-number",
+      }
+    );
+    const res = mockRes();
+
+    postEmployee(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.body).toHaveProperty("message");
+  });
+});
+
+// patchEmployee (update)
+describe("employees.controller.patchEmployee", () => {
+  it("should return 200 and the updated employee when id & changes are valid", () => {
+    const req = mockReq({ id: "1" }, { name: "Updated Name" });
+    const res = mockRes();
+
+    patchEmployee(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.body).toHaveProperty("id", 1);
+    expect(res.body).toHaveProperty("name", "Updated Name");
+  });
+
+  it("should return 400 when no valid fields are provided", () => {
+    const req = mockReq({ id: "1" }, { unknown: "field" });
+    const res = mockRes();
+
+    patchEmployee(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.body).toHaveProperty("message");
+  });
+});
+
+// removeEmployee (delete)
+describe("employees.controller.removeEmployee", () => {
+  it("should return 200 when deletion succeeds", () => {
+    const req = mockReq({ id: "1" });
+    const res = mockRes();
+
+    removeEmployee(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.body).toHaveProperty("message");
+  });
+
+  it("should return 400 when id is not a number", () => {
+    const req = mockReq({ id: "abc" });
+    const res = mockRes();
+
+    removeEmployee(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.body).toHaveProperty("message");
+  });
+});
+
 
