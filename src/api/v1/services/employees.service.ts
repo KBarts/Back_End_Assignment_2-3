@@ -53,3 +53,19 @@ export function deleteEmployee(id: number): boolean {
   return true;
 }
 
+/**
+ * List employees that belong to a specific branch
+ */
+export function listEmployeesByBranch(branchId: number): Employee[] {
+  return employees.filter((e) => e.branchId === branchId);
+}
+
+/**
+ * List employees that belong to a specific department 
+ */
+export function listEmployeesByDepartment(department: string): Employee[] {
+  const dep = department.trim().toLowerCase();
+  return employees.filter((e) => e.department.toLowerCase() === dep);
+}
+
+
