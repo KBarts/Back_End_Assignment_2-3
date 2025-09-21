@@ -5,6 +5,9 @@ import {
   createEmployee,
   updateEmployee,
   deleteEmployee,
+  // NEW
+  listEmployeesByBranch,
+  listEmployeesByDepartment,
 } from "../services/employees.service";
 
 /** GET /api/v1/employees */
@@ -111,4 +114,26 @@ export function removeEmployee(req: Request, res: Response): void {
   }
 
   res.status(200).json({ message: "Employee deleted" });
+}
+
+/** GET /api/v1/employees/branch/:branchId */
+export function getEmployeesByBranch(req: Request, res: Response): void {
+  const branchId = Number(req.params.branchId);
+  if (Number.isNaN(branchId)) {
+    res.status(400).json({ message: "Invalid branchId parameter" });
+    return;
+  }
+  const data = listEmployeesByBranch(branchId);
+  res.status(200).json(data);
+}
+
+/** GET /api/v1/employees/department/:department */
+export function getEmployeesByDepartment(req: Request, res: Response): void {
+  const department = String(req.params.department ?? "").trim();
+  if (!department) {
+    res.status(400).json({ message: "Missing department parameter" });
+    return;
+  }
+  const data = listEmployeesByDepartment(department);
+  res.status(200).json(data);
 }
