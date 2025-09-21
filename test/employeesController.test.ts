@@ -6,6 +6,9 @@ import {
   postEmployee,
   patchEmployee,
   removeEmployee,
+  // added:
+  getEmployeesByBranch,
+  getEmployeesByDepartment,
 } from "../src/api/v1/controllers/employees.controller";
 
 // Mock the service layer so these are controller-only tests
@@ -39,6 +42,38 @@ jest.mock("../src/api/v1/services/employees.service", () => ({
     id === 1 ? { id: 1, ...changes } : null
   ),
   deleteEmployee: jest.fn((id: number) => id === 1),
+
+  // corrected names to match the controller's imports
+  listEmployeesByBranch: jest.fn((branchId: number) =>
+    branchId === 1
+      ? [
+          {
+            id: 2,
+            name: "Bob",
+            position: "Teller",
+            department: "IT",
+            email: "b@x.com",
+            phone: "222",
+            branchId: 1,
+          },
+        ]
+      : []
+  ),
+  listEmployeesByDepartment: jest.fn((dept: string) =>
+    dept === "IT"
+      ? [
+          {
+            id: 3,
+            name: "Carol",
+            position: "Developer",
+            department: "IT",
+            email: "c@x.com",
+            phone: "333",
+            branchId: 2,
+          },
+        ]
+      : []
+  ),
 }));
 
 // Minimal req/res helpers
@@ -201,6 +236,52 @@ describe("employees.controller.removeEmployee", () => {
     const res = mockRes();
 
     removeEmployee(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.body).toHaveProperty("message");
+  });
+});
+
+// getEmployeesByBranch
+describe("employees.controller.getEmployeesByBranch", () => {
+  it("should return 200 and an array for a valid branchId", () => {
+    const req = mockReq({ branchId: "1" });
+    const res = mockRes();
+
+    getEmployeesByBranch(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
+
+  it("should return 400 when branchId is not a number", () => {
+    const req = mockReq({ branchId: "abc" });
+    const res = mockRes();
+
+    getEmployeesByBranch(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.body).toHaveProperty("message");
+  });
+});
+
+// getEmployeesByDepartment
+describe("employees.controller.getEmployeesByDepartment", () => {
+  it("should return 200 and an array for a valid department", () => {
+    const req = mockReq({ department: "IT" });
+    const res = mockRes();
+
+    getEmployeesByDepartment(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(Array.isArray(res.body)).toBe(true);
+  });
+
+  it("should return 400 when department is missing/empty", () => {
+    const req = mockReq({ department: "" });
+    const res = mockRes();
+
+    getEmployeesByDepartment(req, res);
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.body).toHaveProperty("message");
