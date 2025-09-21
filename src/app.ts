@@ -1,6 +1,6 @@
 import express from "express";
 import morgan from "morgan";
-import employeesRouter from "./api/v1/routes/employees.routes";
+import { employeesRouter } from "./api/v1/routes/employees.routes";
 import branchesRouter from "./api/v1/routes/branches.routes";
 
 const app = express();
@@ -23,3 +23,8 @@ app.use("/api/v1/employees", employeesRouter);
 app.use("/api/v1/branches", branchesRouter);
 
 export default app;
+
+
+
+
+
