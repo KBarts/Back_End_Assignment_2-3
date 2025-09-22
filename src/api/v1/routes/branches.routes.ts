@@ -7,7 +7,7 @@ import {
   removeBranch,
 } from "../controllers/branches.controllers";
 
-const router = Router();
+const router: Router = Router();
 
 router.get("/", getAllBranches);
 router.get("/:id", getBranch);

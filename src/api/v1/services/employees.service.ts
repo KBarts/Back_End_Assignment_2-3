@@ -1,4 +1,4 @@
-import { employees, type Employee } from "../../../data/employees";
+import { employees, type Employee } from "../../../data/employees"; 
 
 /**
  * Return all employees.
@@ -20,7 +20,7 @@ export function getEmployeeById(id: number): Employee | undefined {
 export function createEmployee(
   input: Omit<Employee, "id">
 ): Employee {
-  const nextId =
+  const nextId: number =
     employees.length > 0 ? Math.max(...employees.map((e) => e.id)) + 1 : 1;
 
   const created: Employee = { id: nextId, ...input };
@@ -35,7 +35,7 @@ export function updateEmployee(
   id: number,
   changes: Partial<Omit<Employee, "id">>
 ): Employee | undefined {
-  const idx = employees.findIndex((e) => e.id === id);
+  const idx: number = employees.findIndex((e) => e.id === id);
   if (idx === -1) return undefined;
 
   employees[idx] = { ...employees[idx], ...changes, id };
@@ -46,7 +46,7 @@ export function updateEmployee(
  * Delete an employee by id.
  */
 export function deleteEmployee(id: number): boolean {
-  const idx = employees.findIndex((e) => e.id === id);
+  const idx: number = employees.findIndex((e) => e.id === id);
   if (idx === -1) return false;
 
   employees.splice(idx, 1);
@@ -64,8 +64,9 @@ export function listEmployeesByBranch(branchId: number): Employee[] {
  * List employees that belong to a specific department 
  */
 export function listEmployeesByDepartment(department: string): Employee[] {
-  const dep = department.trim().toLowerCase();
+  const dep: string = department.trim().toLowerCase();
   return employees.filter((e) => e.department.toLowerCase() === dep);
 }
+
 
 

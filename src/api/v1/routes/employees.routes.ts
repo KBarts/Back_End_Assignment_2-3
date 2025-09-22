@@ -9,7 +9,7 @@ import {
   getEmployeesByDepartment,
 } from "../controllers/employees.controller";
 
-export const employeesRouter = Router();
+export const employeesRouter: Router = Router();
 
 employeesRouter.get("/branch/:branchId", getEmployeesByBranch);
 employeesRouter.get("/department/:department", getEmployeesByDepartment);
@@ -19,3 +19,4 @@ employeesRouter.get("/:id", getEmployee);
 employeesRouter.post("/", postEmployee);
 employeesRouter.patch("/:id", patchEmployee);
 employeesRouter.delete("/:id", removeEmployee);
+

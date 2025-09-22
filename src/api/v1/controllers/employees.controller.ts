@@ -5,25 +5,24 @@ import {
   createEmployee,
   updateEmployee,
   deleteEmployee,
-  // NEW
   listEmployeesByBranch,
   listEmployeesByDepartment,
 } from "../services/employees.service";
 
 /** GET /api/v1/employees */
 export function getAllEmployees(_req: Request, res: Response): void {
-  const data = listEmployees();
+  const data: ReturnType<typeof listEmployees> = listEmployees();
   res.status(200).json(data);
 }
 
 /** GET /api/v1/employees/:id */
 export function getEmployee(req: Request, res: Response): void {
-  const id = Number(req.params.id);
+  const id: number = Number(req.params.id);
   if (Number.isNaN(id)) {
     res.status(400).json({ message: "Invalid id parameter" });
     return;
   }
-  const found = getEmployeeById(id);
+  const found: ReturnType<typeof getEmployeeById> = getEmployeeById(id);
   if (!found) {
     res.status(404).json({ message: "Employee not found" });
     return;
@@ -35,7 +34,7 @@ export function getEmployee(req: Request, res: Response): void {
 export function postEmployee(req: Request, res: Response): void {
   const { name, position, department, email, phone, branchId } = req.body ?? {};
 
-  const hasAll =
+  const hasAll: boolean =
     typeof name === "string" &&
     typeof position === "string" &&
     typeof department === "string" &&
@@ -48,7 +47,7 @@ export function postEmployee(req: Request, res: Response): void {
     return;
   }
 
-  const created = createEmployee({
+  const created: ReturnType<typeof createEmployee> = createEmployee({
     name,
     position,
     department,
@@ -62,7 +61,7 @@ export function postEmployee(req: Request, res: Response): void {
 
 /** PATCH /api/v1/employees/:id */
 export function patchEmployee(req: Request, res: Response): void {
-  const id = Number(req.params.id);
+  const id: number = Number(req.params.id);
   if (Number.isNaN(id)) {
     res.status(400).json({ message: "Invalid id parameter" });
     return;
@@ -90,7 +89,7 @@ export function patchEmployee(req: Request, res: Response): void {
     return;
   }
 
-  const updated = updateEmployee(id, changes);
+  const updated: ReturnType<typeof updateEmployee> = updateEmployee(id, changes);
   if (!updated) {
     res.status(404).json({ message: "Employee not found" });
     return;
@@ -101,13 +100,13 @@ export function patchEmployee(req: Request, res: Response): void {
 
 /** DELETE /api/v1/employees/:id */
 export function removeEmployee(req: Request, res: Response): void {
-  const id = Number(req.params.id);
+  const id: number = Number(req.params.id);
   if (Number.isNaN(id)) {
     res.status(400).json({ message: "Invalid id parameter" });
     return;
   }
 
-  const removed = deleteEmployee(id);
+  const removed: ReturnType<typeof deleteEmployee> = deleteEmployee(id);
   if (!removed) {
     res.status(404).json({ message: "Employee not found" });
     return;
@@ -118,22 +117,23 @@ export function removeEmployee(req: Request, res: Response): void {
 
 /** GET /api/v1/employees/branch/:branchId */
 export function getEmployeesByBranch(req: Request, res: Response): void {
-  const branchId = Number(req.params.branchId);
+  const branchId: number = Number(req.params.branchId);
   if (Number.isNaN(branchId)) {
     res.status(400).json({ message: "Invalid branchId parameter" });
     return;
   }
-  const data = listEmployeesByBranch(branchId);
+  const data: ReturnType<typeof listEmployeesByBranch> = listEmployeesByBranch(branchId);
   res.status(200).json(data);
 }
 
 /** GET /api/v1/employees/department/:department */
 export function getEmployeesByDepartment(req: Request, res: Response): void {
-  const department = String(req.params.department ?? "").trim();
+  const department: string = String(req.params.department ?? "").trim();
   if (!department) {
     res.status(400).json({ message: "Missing department parameter" });
     return;
   }
-  const data = listEmployeesByDepartment(department);
+  const data: ReturnType<typeof listEmployeesByDepartment> = listEmployeesByDepartment(department);
   res.status(200).json(data);
 }
+

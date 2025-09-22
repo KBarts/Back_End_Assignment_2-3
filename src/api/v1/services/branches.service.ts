@@ -12,7 +12,7 @@ export function getBranchById(id: number): Branch | undefined {
 
 // Create a new branch
 export function createBranch(input: Omit<Branch, "id">): Branch {
-  const nextId = branches.reduce((max, b) => (b.id > max ? b.id : max), 0) + 1;
+  const nextId: number = branches.reduce((max, b) => (b.id > max ? b.id : max), 0) + 1;
   const created: Branch = { id: nextId, ...input };
   branches.push(created);
   return created;
@@ -23,7 +23,7 @@ export function updateBranch(
   id: number,
   changes: Partial<Omit<Branch, "id">>
 ): Branch | null {
-  const idx = branches.findIndex((b) => b.id === id);
+  const idx: number = branches.findIndex((b) => b.id === id);
   if (idx === -1) return null;
 
   const updated: Branch = { ...branches[idx], ...changes, id: branches[idx].id };
@@ -33,7 +33,7 @@ export function updateBranch(
 
 // Delete a branch
 export function deleteBranch(id: number): boolean {
-  const idx = branches.findIndex((b) => b.id === id);
+  const idx: number = branches.findIndex((b) => b.id === id);
   if (idx === -1) return false;
 
   branches.splice(idx, 1);

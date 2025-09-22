@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from "express"; 
 import {
   listBranches,
   getBranchById,
@@ -9,19 +9,19 @@ import {
 
 /** GET /api/v1/branches */
 export function getAllBranches(_req: Request, res: Response): void {
-  const data = listBranches();
+  const data: ReturnType<typeof listBranches> = listBranches();
   res.status(200).json(data);
 }
 
 /** GET /api/v1/branches/:id */
 export function getBranch(req: Request, res: Response): void {
-  const id = Number(req.params.id);
+  const id: number = Number(req.params.id);
   if (Number.isNaN(id)) {
     res.status(400).json({ message: "Invalid id parameter" });
     return;
   }
 
-  const found = getBranchById(id);
+  const found: ReturnType<typeof getBranchById> = getBranchById(id);
   if (!found) {
     res.status(404).json({ message: "Branch not found" });
     return;
@@ -34,7 +34,7 @@ export function getBranch(req: Request, res: Response): void {
 export function postBranch(req: Request, res: Response): void {
   const { name, address, phone } = req.body ?? {};
 
-  const hasAll =
+  const hasAll: boolean =
     typeof name === "string" &&
     typeof address === "string" &&
     typeof phone === "string";
@@ -44,13 +44,13 @@ export function postBranch(req: Request, res: Response): void {
     return;
   }
 
-  const created = createBranch({ name, address, phone });
+  const created: ReturnType<typeof createBranch> = createBranch({ name, address, phone });
   res.status(201).json(created);
 }
 
 /** PATCH /api/v1/branches/:id */
 export function patchBranch(req: Request, res: Response): void {
-  const id = Number(req.params.id);
+  const id: number = Number(req.params.id);
   if (Number.isNaN(id)) {
     res.status(400).json({ message: "Invalid id parameter" });
     return;
@@ -72,7 +72,7 @@ export function patchBranch(req: Request, res: Response): void {
     return;
   }
 
-  const updated = updateBranch(id, changes);
+  const updated: ReturnType<typeof updateBranch> = updateBranch(id, changes);
   if (!updated) {
     res.status(404).json({ message: "Branch not found" });
     return;
@@ -83,13 +83,13 @@ export function patchBranch(req: Request, res: Response): void {
 
 /** DELETE /api/v1/branches/:id */
 export function removeBranch(req: Request, res: Response): void {
-  const id = Number(req.params.id);
+  const id: number = Number(req.params.id);
   if (Number.isNaN(id)) {
     res.status(400).json({ message: "Invalid id parameter" });
     return;
   }
 
-  const removed = deleteBranch(id);
+  const removed: ReturnType<typeof deleteBranch> = deleteBranch(id);
   if (!removed) {
     res.status(404).json({ message: "Branch not found" });
     return;

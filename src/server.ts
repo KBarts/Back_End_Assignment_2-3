@@ -1,6 +1,6 @@
 import app from "./app";
 
-const PORT = Number(process.env.PORT) || 3000;
+const PORT: number = Number(process.env.PORT) || 3000;
 
 // Start the HTTP server for local development.
 app.listen(PORT, () => {

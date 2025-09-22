@@ -1,9 +1,9 @@
-import express from "express";
+import express, { type Express } from "express";
 import morgan from "morgan";
 import { employeesRouter } from "./api/v1/routes/employees.routes";
 import branchesRouter from "./api/v1/routes/branches.routes";
 
-const app = express();
+const app: Express = express();
 
 // Parse JSON request bodies for API endpoints.
 app.use(express.json());
@@ -23,6 +23,7 @@ app.use("/api/v1/employees", employeesRouter);
 app.use("/api/v1/branches", branchesRouter);
 
 export default app;
+
 
 
 
